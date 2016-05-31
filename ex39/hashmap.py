@@ -1,49 +1,25 @@
 # -*-coding:utf8
-
-
-
 def new(num_buckets=256):
-    """
-    Initializes a Map with the given number of buckets.
-    :param num_buckets:
-    :return:
-    """
+    """Initializes a Map with the given number of buckets."""
     aMap = []
-    for i in range(0, num_buckets, ):
+    for i in range(0, num_buckets):
         aMap.append([])
     return aMap
 
-
 def hash_key(aMap, key):
-    """
-    Given a key this will create a number and convert it to an index for the aMap's buckets.
-    :param aMap:
-    :param key:
-    :return:
-    """
+    """Given a key this will create a number and then convert it to
+    an index for the aMap's buckets."""
     return hash(key) % len(aMap)
 
-
 def get_bucket(aMap, key):
-    """
-    Given a key, find the bucket where it would go.
-    :param aMap:
-    :param key:
-    :return:
-    """
+    """Given a key, find the bucket where it would go."""
     bucket_id = hash_key(aMap, key)
     return aMap[bucket_id]
-
-
 
 def get_slot(aMap, key, default=None):
     """
     Returns the index, key, and value of a slot found in a bucket.
     Returns -1, key, and default (None if not set) when not found.
-    :param aMap:
-    :param key:
-    :param default:
-    :return:
     """
     bucket = get_bucket(aMap, key)
 
@@ -52,63 +28,38 @@ def get_slot(aMap, key, default=None):
         if key == k:
             return i, k, v
 
-        return -1, key, default
-
+    return -1, key, default
 
 def get(aMap, key, default=None):
-    """
-    Gets the value in a bucket for the given key, or the default.
-    :param aMap:
-    :param key:
-    :param default:
-    :return:
-    """
+    """Gets the value in a bucket for the given key, or the default."""
     i, k, v = get_slot(aMap, key, default=default)
     return v
 
-def get(aMap, key, value):
-    """
-    Set the key to the value, replacing any existing value.
-    :param aMap:
-    :param key:
-    :param value:
-    :return:
-    """
+def set(aMap, key, value):
+    """Sets the key to the value, replacing any existing value."""
     bucket = get_bucket(aMap, key)
     i, k, v = get_slot(aMap, key)
 
-    if 0 <= i:
-        #the key exists, replace it
+    if i >= 0:
+        # the key exists, replace it
         bucket[i] = (key, value)
     else:
-        #the key does not, append to creat it
+        # the key does not, append to create it
         bucket.append((key, value))
 
-
 def delete(aMap, key):
-    """
-    Deletes the given key from the Map.
-    :param aMap:
-    :param key:
-    :return:
-    """
+    """Deletes the given key from the Map."""
     bucket = get_bucket(aMap, key)
 
-    for i in range(len(bucket)):
+    for i in xrange(len(bucket)):
         k, v = bucket[i]
         if key == k:
             del bucket[i]
             break
 
-
 def list(aMap):
-    """
-    Prints out what's in the Map.
-    :param aMap:
-    :return:
-    """
+    """Prints out what's in the Map."""
     for bucket in aMap:
         if bucket:
             for k, v in bucket:
-                print k,
-                
+                print k, v
